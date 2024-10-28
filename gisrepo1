@@ -1,0 +1,13 @@
+setwd("D:/0612/Documents/gis/gisrepo")
+install.packages('pacman')
+pacman::p_load(sf,tidyverse,RSQLite,tmap,tmaptools)
+
+world <- st_read("World_Countries_(Generalized)_2402777631520798174/World_Countries_Generalized.shp")
+inequality_data <- read_csv("HDR23-24_Composite_indices_complete_time_series.csv")
+inequality_data <- inequality_data %>%mutate(Inequality_Difference = gii_2019 - gii_2010)  
+
+world_inequality <- world %>%
+  left_join(inequality_data, by = c("ISO" = "iso3")) 
+
+tmap_mode("plot")
+qtm(world_inequality ,fill = "Inequality_Difference")
